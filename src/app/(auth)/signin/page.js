@@ -39,7 +39,7 @@ export default function SignIn() {
       if (session?.user?.role === "barber") {
         router.push("/barber");
       } else {
-        router.push("/customer/dashboard");
+        router.push("/customer");
       }
     }
   };

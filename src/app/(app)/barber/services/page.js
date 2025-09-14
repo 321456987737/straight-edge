@@ -28,7 +28,7 @@ const ServicesPage = () => {
     try {
       setLoading(true);
       const res = await axios.get(`/api/barber/${id}`);
-      setBarber(res.data);
+      setBarber(res.data.barberData || res.data); // safer
     } catch (err) {
       setError(err.response?.data?.message || err.message);
     } finally {
@@ -75,42 +75,6 @@ const ServicesPage = () => {
     handleDeleteService(showDeleteConfirm.id);
   };
 
-  if (loading)
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="flex flex-col items-center"
-        >
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-          <p className="text-gray-600">Loading services...</p>
-        </motion.div>
-      </div>
-    );
-
-  if (error)
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center p-6">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-md w-full bg-white p-6 rounded-lg shadow-md"
-        >
-          <div className="text-red-500 text-center">
-            <h3 className="text-lg font-medium mb-2">Error Loading Services</h3>
-            <p className="text-sm">{error}</p>
-            <button
-              onClick={fetchBarberData}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-            >
-              Try Again
-            </button>
-          </div>
-        </motion.div>
-      </div>
-    );
-
   return (
     <motion.div
       className="min-h-screen bg-white py-10"
@@ -126,9 +90,13 @@ const ServicesPage = () => {
           className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
         >
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              {barber?.username}’s Services
-            </h1>
+            {loading ? (
+              <div className="h-7 w-40 bg-gray-200 animate-pulse rounded mb-2"></div>
+            ) : (
+              <h1 className="text-3xl font-bold text-gray-900">
+                {barber?.username}’s Services
+              </h1>
+            )}
             <p className="text-gray-600 mt-2">
               Manage your service offerings and prices
             </p>
@@ -195,7 +163,19 @@ const ServicesPage = () => {
             </p>
           </div>
           <div className="border-t border-gray-200">
-            {barber?.services?.length > 0 ? (
+            {loading ? (
+              <ul className="divide-y divide-gray-200">
+                {[1, 2, 3].map((i) => (
+                  <li key={i} className="px-6 py-4 flex justify-between items-center">
+                    <div>
+                      <div className="h-4 w-32 bg-gray-200 animate-pulse rounded mb-2"></div>
+                      <div className="h-3 w-20 bg-gray-200 animate-pulse rounded"></div>
+                    </div>
+                    <div className="h-7 w-16 bg-gray-200 animate-pulse rounded"></div>
+                  </li>
+                ))}
+              </ul>
+            ) : barber?.services?.length > 0 ? (
               <ul className="divide-y divide-gray-200">
                 <AnimatePresence>
                   {barber.services.map((service, index) => (

@@ -10,7 +10,7 @@ export async function GET(request, { params }) {
     if (!barberData) {
       return NextResponse.json({ error: 'Barber not found' }, { status: 404 });
     }
-    return NextResponse.json({barberData:barberData,success: true }, { status: 200 });
+    return NextResponse.json({barberData,success: true }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }

@@ -9,6 +9,7 @@ import {
   Star, Map, Building
 } from "lucide-react";
 import axios from "axios";
+import Link from "next/link";
 
 const BarberSignup = ({ onBack }) => {
   const router = useRouter();
@@ -753,6 +754,10 @@ const BarberSignup = ({ onBack }) => {
                   "Register as Barber"
                 )}
               </motion.button>
+              <motion.div className="mt-8 text-center">
+                Already have an account?{" "}
+                <Link href="/signin" className="text-orange-500 hover:underline ">Sign In</Link>
+              </motion.div>
             </motion.div>
           </motion.form>
         </motion.div>

@@ -35,7 +35,8 @@ const Page = () => {
         throw new Error("Failed to fetch barber data");
       }
       const data = await response.json();
-      setBarber(data);
+      console.log(data)
+      setBarber(data.barberData);
       console.log(data);
     } catch (err) {
       setError(err.message);
@@ -662,7 +663,7 @@ const Page = () => {
                           start: e.target.value,
                         })
                       }
-                      className="shadow-sm focus:ring-black focus:border-black block w-full text-sm border-gray-300 rounded-md p-2 border"
+                      className="shadow-sm  block w-full text-sm border-gray-300 rounded-md p-2 border"
                     />
                     <span className="self-center">-</span>
                     <input
@@ -674,12 +675,12 @@ const Page = () => {
                           end: e.target.value,
                         })
                       }
-                      className="shadow-sm focus:black focus:border-black block w-full text-sm border-gray-300 rounded-md p-2 border"
+                      className="shadow-sm  block w-full text-sm border-gray-300 rounded-md p-2 border"
                     />
                   </div>
                   <button
                     onClick={handleAddWorkingHour}
-                    className="border border-black  hover:bg-black text-black font-medium py-2 px-4 rounded-md text-sm transition-colors whitespace-nowrap"
+                    className="border border-black  hover:bg-black/5 text-black font-medium py-2 px-4 rounded-md text-sm transition-colors whitespace-nowrap"
                   >
                     Add Hours
                   </button>

@@ -1,139 +1,75 @@
 "use client";
 import { motion } from "framer-motion";
-import { Home, ArrowLeft, AlertCircle, HelpCircle } from "lucide-react";
+import { Home, ArrowLeft, Scissors } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function NotFound() {
   const router = useRouter();
 
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        delayChildren: 0.3,
-        staggerChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { type: "spring", stiffness: 120 },
-    },
-  };
-
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4 text-white">
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Background - diagonal black & white */}
+      <div className="absolute inset-0 bg-[linear-gradient(112deg,#000_50%,#fff_50%)]"></div>
+
+      {/* Glassmorphic Card */}
       <motion.div
-        className="max-w-4xl w-full bg-zinc-900 rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row"
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="relative z-10 w-full max-w-md text-black p-8 rounded-2xl shadow-lg border border-white/20 
+                   bg-white/90 backdrop-blur-xl"
       >
-        {/* Left Side - Big 404 */}
+        {/* Funny Animated 404 */}
         <motion.div
-          className="flex items-center justify-center md:w-2/5 bg-zinc-950 p-12"
-          variants={itemVariants}
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+          className="flex items-center justify-center gap-3 mb-6"
         >
-          <motion.h1
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-            className="text-[6rem] md:text-[8rem] font-bold text-white tracking-tight"
+          <h1 className="text-[5rem] font-extrabold drop-shadow-lg">4</h1>
+          <motion.div
+            animate={{ rotate: [0, -20, 20, -20, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
           >
-            404
-          </motion.h1>
+            <Scissors size={80} className="text-black drop-shadow-md" />
+          </motion.div>
+          <h1 className="text-[5rem] font-extrabold drop-shadow-lg">4</h1>
         </motion.div>
 
-        {/* Right Side - Content */}
-        <div className="p-8 md:p-12 md:w-3/5">
-          <motion.div variants={itemVariants} className="mb-6">
-            <div className="flex items-center text-red-500 mb-3">
-              <AlertCircle size={22} className="mr-2" />
-              <h2 className="text-xl font-semibold">Page Not Found</h2>
-            </div>
-            <p className="text-gray-400 leading-relaxed">
-              Sorry, the page you are looking for does not exist or has been moved.
-            </p>
-          </motion.div>
+        {/* Funny Text */}
+        <h2 className="text-2xl font-bold mb-2">Oops… Wrong Cut!</h2>
+        <p className="text-black mb-6">
+          Looks like our barber trimmed this page a little too short.  
+          Don’t worry, your hairstyle is safe — just not this URL. ✂️😂
+        </p>
 
-          <motion.div variants={itemVariants} className="mb-6">
-            <h3 className="text-lg font-medium mb-4 text-white">
-              Possible reasons:
-            </h3>
-            <ul className="text-gray-400 space-y-2">
-              <li className="flex items-start">
-                <span className="text-white mr-2">•</span>
-                The page may have been deleted or renamed.
-              </li>
-              <li className="flex items-start">
-                <span className="text-white mr-2">•</span>
-                You might have mistyped the URL.
-              </li>
-              <li className="flex items-start">
-                <span className="text-white mr-2">•</span>
-                The resource is temporarily unavailable.
-              </li>
-            </ul>
-          </motion.div>
-
-          {/* Buttons */}
-          <motion.div
-            variants={itemVariants}
-            className="flex flex-col sm:flex-row gap-4"
+        {/* Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => router.push("/")}
+            className="flex items-center justify-center w-full sm:w-auto bg-white/20 border-black border-2 backdrop-blur-md text-black font-medium py-3 px-6 rounded-lg hover:bg-white/30 transition"
           >
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => router.push("/")}
-              className="flex items-center justify-center bg-white text-black font-medium py-3 px-6 rounded-lg shadow hover:bg-gray-200 transition-colors"
-            >
-              <Home size={18} className="mr-2" />
-              Go Home
-            </motion.button>
+            <Home size={18} className="mr-2" />
+            Back to Home
+          </motion.button>
 
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => router.back()}
-              className="flex items-center justify-center border border-white text-white hover:bg-zinc-800 font-medium py-3 px-6 rounded-lg transition-colors"
-            >
-              <ArrowLeft size={18} className="mr-2" />
-              Go Back
-            </motion.button>
-
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center justify-center text-gray-400 hover:text-white font-medium py-3 px-6 rounded-lg transition-colors"
-            >
-              <HelpCircle size={18} className="mr-2" />
-              Help
-            </motion.button>
-          </motion.div>
-
-          {/* Footer Help */}
-          <motion.div
-            variants={itemVariants}
-            className="mt-8 pt-6 border-t border-gray-800"
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => router.back()}
+            className="flex items-center justify-center w-full  border-black border-2 sm:w-auto  text-black font-medium py-3 px-6 rounded-lg hover:bg-white/10 transition"
           >
-            <p className="text-sm text-gray-500">
-              Need assistance?{" "}
-              <a href="#" className="text-white hover:underline">
-                Contact Support
-              </a>{" "}
-              or{" "}
-              <a href="#" className="text-white hover:underline">
-                Visit Help Center
-              </a>
-            </p>
-          </motion.div>
+            <ArrowLeft size={18} className="mr-2" />
+            Go Back
+          </motion.button>
         </div>
+
+        {/* Tiny footer joke */}
+        <p className="text-xs text-black mt-6 italic">
+          P.S. No actual pages were harmed during this haircut.
+        </p>
       </motion.div>
     </div>
   );
