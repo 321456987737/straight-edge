@@ -7,7 +7,7 @@ export default function AdminLayout({ children }) {
       {/* Sidebar or Navbar */}
       <Navbar />
       {/* Main content area */}
-      <main className="  ">
+      <main className="mb-32  ">
         {children}
       </main>
     </div>
