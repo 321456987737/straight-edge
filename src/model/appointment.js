@@ -60,7 +60,13 @@ const appointmentSchema = new mongoose.Schema({
       },
     ],
   },
-});
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+},
+{ timestamps: true }
+);
 
 export default mongoose.models.appointment ||
   mongoose.model("appointment", appointmentSchema);

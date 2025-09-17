@@ -52,7 +52,7 @@ const Totals = () => {
       icon: <Calendar className="w-8 h-8 text-black" />,
     },
     {
-      label: "Completed",
+      label: "Completed appointments",
       value: completedAppointments,
       icon: <CheckCircle className="w-8 h-8 text-black" />,
     },
@@ -67,7 +67,7 @@ const Totals = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: index * 0.2 }}
           whileHover={{ scale: 1.05 }}
-          className="flex items-center md:gap-4 gap-2 bg-white shadow-lg border border-black rounded-2xl p-5 hover:shadow-xl transition"
+          className="flex items-center md:gap-4 gap-2     bg-white shadow-lg border border-black rounded-2xl p-5 hover:shadow-xl transition"
         >
           <div className="flex-shrink-0">{stat.icon}</div>
           <div>

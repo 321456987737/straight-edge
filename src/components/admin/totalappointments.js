@@ -13,7 +13,7 @@ import {
 } from "recharts";
 import { motion } from "framer-motion";
 
-const Barberchart = () => {
+const TotalAppointments = () => {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState("thisMonth");
   const [loading, setLoading] = useState(false);
@@ -25,9 +25,9 @@ const Barberchart = () => {
   const fetchData = async (type) => {
     setLoading(true);
     try {
-      const res = await axios.get(`/api/admin/barbers?filter=${type}`);
-      setData(res.data.barbersData); // [{ date, barbers }]
-      console.log(res.data.barbersData);
+      const res = await axios.get(`/api/admin/appointments?filter=${type}`);
+      setData(res.data.appointmentsData); // [{ date, barbers }]
+      console.log(res.data.appointmentsData);
     } catch (error) {
       console.error("Error fetching chart data:", error);
     } finally {
@@ -42,9 +42,9 @@ const Barberchart = () => {
   ];
 
   return (
-    <div className="bg-white w-full text-black rounded-2xl p-6">
+    <div className="bg-white text-black rounded-2xl p-6 w-full">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-        <h2 className="text-xl font-bold">Barbers Growth</h2>
+        <h2 className="text-xl font-bold">Completed Appointments </h2>
 
         <div className="flex gap-2">
           {filters.map((f) => (
@@ -86,7 +86,7 @@ const Barberchart = () => {
             <Legend />
             <Line
               type="monotone"
-              dataKey="barbers"
+              dataKey="appointments"
               stroke="#000000"
               strokeWidth={3}
               dot={{ r: 5, fill: "#000000" }}
@@ -99,4 +99,5 @@ const Barberchart = () => {
   );
 };
 
-export default Barberchart;
+export default TotalAppointments;
+

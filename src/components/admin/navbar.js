@@ -18,7 +18,7 @@ export default function Page() {
   // ✅ Unified nav links with hrefs
   const navLinks = [
     { label: "Dashboard", href: "/admin" },
-    { label: "Bookings", href: "/admin/appointments" },
+    { label: "Appointments", href: "/admin/appointments" },
     { label: "Clients", href: "/admin/customers" },
     { label: "Barbers", href: "/admin/barbers" },
     { label: "Reports", href: "/admin/reports" },
@@ -36,7 +36,7 @@ export default function Page() {
     <div className=" flex flex-col text-white">
       {/* Top Navbar */}
       <motion.nav
-        className="sticky top-0 z-50 flex items-center justify-between px-6 lg:px-12 py-4 bg-black border-b border-white/10"
+        className="sticky top-0 z-[1000] flex items-center justify-between px-6 lg:px-12 py-4 bg-black border-b border-white/10"
       >
         {/* Logo */}
         <img
@@ -90,7 +90,7 @@ export default function Page() {
 
       {/* Bottom Navbar (mobile only) */}
       <motion.nav
-        className="fixed bottom-0 left-0 right-0 flex justify-around items-center bg-black border-t border-white/10 px-4 py-3 lg:hidden"
+        className="fixed bottom-0 z-[100] left-0 right-0 flex justify-around items-center bg-black border-t border-white/10 px-4 py-3 lg:hidden"
       >
         {bottomNavItems.map(({ label, icon: Icon, href }) => (
           <Link

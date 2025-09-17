@@ -2,8 +2,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import {
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -13,7 +13,7 @@ import {
 } from "recharts";
 import { motion } from "framer-motion";
 
-const Barberchart = () => {
+const SalesChart = () => {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState("thisMonth");
   const [loading, setLoading] = useState(false);
@@ -25,11 +25,11 @@ const Barberchart = () => {
   const fetchData = async (type) => {
     setLoading(true);
     try {
-      const res = await axios.get(`/api/admin/barbers?filter=${type}`);
-      setData(res.data.barbersData); // [{ date, barbers }]
-      console.log(res.data.barbersData);
+      const res = await axios.get(`/api/admin/sales?filter=${type}`);
+      setData(res.data.salesData); // [{ date, sales }]
+      console.log(res.data.salesData);
     } catch (error) {
-      console.error("Error fetching chart data:", error);
+      console.error("Error fetching sales data:", error);
     } finally {
       setLoading(false);
     }
@@ -42,11 +42,12 @@ const Barberchart = () => {
   ];
 
   return (
-    <div className="bg-white w-full text-black rounded-2xl p-6">
+    <div className="bg-white w-full text-black rounded-2xl p-6 ">
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-        <h2 className="text-xl font-bold">Barbers Growth</h2>
+        <h2 className="text-xl font-bold">Total Sales</h2>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           {filters.map((f) => (
             <motion.button
               key={f.value}
@@ -64,39 +65,40 @@ const Barberchart = () => {
         </div>
       </div>
 
+      {/* Chart or Skeleton */}
       {loading ? (
         <div className="animate-pulse space-y-4">
           <div className="h-6 w-32 bg-gray-200 rounded"></div>
           <div className="h-[300px] w-full bg-gray-300 rounded-lg"></div>
         </div>
       ) : (
-        <ResponsiveContainer width="100%" height={350}>
-          <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" />
-            <XAxis dataKey="date" stroke="#374151" />
-            <YAxis stroke="#374151" />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "#ffffff",
-                border: "1px solid #d1d5db",
-                borderRadius: "0.5rem",
-                color: "#000000",
-              }}
-            />
-            <Legend />
-            <Line
-              type="monotone"
-              dataKey="barbers"
-              stroke="#000000"
-              strokeWidth={3}
-              dot={{ r: 5, fill: "#000000" }}
-              activeDot={{ r: 8 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+        <div className="w-full h-[250px] sm:h-[350px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <XAxis dataKey="date" stroke="#000" />
+              <YAxis stroke="#000" />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#ffffff",
+                  border: "1px solid #d1d5db",
+                  borderRadius: "0.5rem",
+                  color: "#000000",
+                }}
+              />
+              <Legend />
+              <Bar
+                dataKey="sales"
+                fill="#000000"
+                barSize={40}
+                radius={[6, 6, 0, 0]}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       )}
     </div>
   );
 };
 
-export default Barberchart;
+export default SalesChart;
