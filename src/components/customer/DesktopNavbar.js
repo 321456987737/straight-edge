@@ -5,13 +5,13 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import BarberSearch from "@/components/customer/search/search";
-import { Home, UserIcon, Scissors, Users, CalendarDays } from "lucide-react";
-
+import { Home, UserIcon, Scissors, Users, CalendarDays, AlertCircle } from "lucide-react";
 const navItems = [
   { href: "/customer", label: "Home", icon: Home },
   { href: "/customer/services", label: "Services", icon: Scissors },
   { href: "/customer/professionals", label: "Pros", icon: Users },
   { href: "/customer/appointments", label: "Book", icon: CalendarDays },
+  { href: "/customer/reports", label: "Report", icon: AlertCircle },
 ];
 
 export default function Navbar({ profileImage }) {

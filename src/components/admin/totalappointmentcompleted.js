@@ -2,8 +2,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import {
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -13,7 +13,7 @@ import {
 } from "recharts";
 import { motion } from "framer-motion";
 
-const SalesChart = () => {
+const TotalCompletdAppointments = () => {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState("thisMonth");
   const [loading, setLoading] = useState(false);
@@ -25,11 +25,11 @@ const SalesChart = () => {
   const fetchData = async (type) => {
     setLoading(true);
     try {
-      const res = await axios.get(`/api/admin/sales?filter=${type}`);
-      setData(res.data.salesData); // [{ date, sales }]
-      console.log(res.data.salesData);
+      const res = await axios.get(`/api/admin/totalappointment?filter=${type}`);
+      setData(res.data.appointmentsData); // [{ date, appointments }]
+      console.log(res.data.appointmentsData);
     } catch (error) {
-      console.error("Error fetching sales data:", error);
+      console.error("Error fetching chart data:", error);
     } finally {
       setLoading(false);
     }
@@ -42,18 +42,18 @@ const SalesChart = () => {
   ];
 
   return (
-    <div className="bg-white w-full text-black rounded-2xl p-4 sm:p-6">
+    <div className="bg-white text-black rounded-2xl p-4 sm:p-6 w-full overflow-hidden">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3 sm:gap-4">
-        <h2 className="text-lg sm:text-xl font-bold">Total Sales</h2>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+        <h2 className="text-lg sm:text-xl font-bold">Total Appointments</h2>
 
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex flex-wrap gap-2">
           {filters.map((f) => (
             <motion.button
               key={f.value}
               whileTap={{ scale: 0.95 }}
               onClick={() => setFilter(f.value)}
-              className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-sm font-medium transition ${
+              className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition ${
                 filter === f.value
                   ? "bg-black text-white"
                   : "bg-gray-200 text-black hover:bg-gray-300"
@@ -65,19 +65,19 @@ const SalesChart = () => {
         </div>
       </div>
 
-      {/* Chart or Skeleton */}
+      {/* Chart */}
       {loading ? (
         <div className="animate-pulse space-y-4">
-          <div className="h-5 w-28 bg-gray-200 rounded"></div>
-          <div className="h-[200px] sm:h-[300px] w-full bg-gray-300 rounded-lg"></div>
+          <div className="h-6 w-28 sm:w-32 bg-gray-200 rounded"></div>
+          <div className="h-[250px] sm:h-[300px] w-full bg-gray-300 rounded-lg"></div>
         </div>
       ) : (
-        <div className="w-full h-[200px] sm:h-[300px]">
+        <div className="w-full h-[250px] sm:h-[350px]">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis dataKey="date" stroke="#000" tick={{ fontSize: 12 }} />
-              <YAxis stroke="#000" tick={{ fontSize: 12 }} />
+            <LineChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" />
+              <XAxis dataKey="date" stroke="#374151" />
+              <YAxis stroke="#374151" />
               <Tooltip
                 contentStyle={{
                   backgroundColor: "#ffffff",
@@ -86,14 +86,16 @@ const SalesChart = () => {
                   color: "#000000",
                 }}
               />
-              <Legend wrapperStyle={{ fontSize: "12px" }} />
-              <Bar
-                dataKey="sales"
-                fill="#000000"
-                barSize={25} // smaller bars for better fit
-                radius={[6, 6, 0, 0]}
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="appointments"
+                stroke="#000000"
+                strokeWidth={3}
+                dot={{ r: 5, fill: "#000000" }}
+                activeDot={{ r: 8 }}
               />
-            </BarChart>
+            </LineChart>
           </ResponsiveContainer>
         </div>
       )}
@@ -101,6 +103,4 @@ const SalesChart = () => {
   );
 };
 
-export default SalesChart;
-
-
+export default TotalCompletdAppointments;

@@ -70,8 +70,8 @@ export default function AdminNavbar() {
 
       {/* Bottom Nav (mobile) */}
       <motion.nav className="fixed bottom-0 z-[100] left-0 right-0 lg:hidden">
-        <div className="max-w-screen-xl mx-auto px-4 sm:px-6">
-          <div className="backdrop-blur-sm bg-black/95 border-t border-white/10 rounded-t-xl flex justify-between items-center px-2 py-2">
+        <div className="max-w-screen-xl mx-auto  sm:px-6">
+          <div className="backdrop-blur-sm bg-black/95 border-t border-white/10 rounded-t-lg flex justify-between items-center px-2 py-2">
             {bottomNavItems.map(({ label, icon: Icon, href }) => (
               <Link
                 key={label}

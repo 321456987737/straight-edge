@@ -41,7 +41,12 @@ const customer = new mongoose.Schema({
    },following: {
       type: Number,
       default: 0
-   }
+   },
+   restricted: {
+  type: Boolean,
+  default: false
+}
+
 },
 {timestamps:true}
 )

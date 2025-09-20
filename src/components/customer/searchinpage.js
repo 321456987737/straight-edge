@@ -17,6 +17,23 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 
+// Custom debounce hook
+const useDebounce = (value, delay) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
+
 // Skeleton Loading Components
 const BarberCardSkeleton = () => (
   <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
@@ -62,12 +79,12 @@ const SearchResultsSkeleton = () => (
 );
 
 export default function SearchInPage() {
-
   const [BookingComponent, setBookingComponent] = useState(false);
   const [barberdata, setbarberdata] = useState(null);
-  console.log(barberdata,"this is the barber data ")
+  
   // State for search and filters
   const [query, setQuery] = useState("");
+  const debouncedQuery = useDebounce(query, 500); // 500ms debounce delay
   const [results, setResults] = useState([]);
   const [topRatedBarbers, setTopRatedBarbers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -207,7 +224,7 @@ export default function SearchInPage() {
     topRatedPagination.hasMore,
   ]);
 
-  // Fetch barbers with filters and pagination
+  // Fetch barbers with filters and pagination - now using debouncedQuery
   useEffect(() => {
     const fetchBarbers = async () => {
       if (!searchPagination.hasMore && searchPagination.skip > 0) return;
@@ -216,7 +233,7 @@ export default function SearchInPage() {
       setError("");
       try {
         const searchParams = new URLSearchParams();
-        if (query.trim()) searchParams.append("search", query);
+        if (debouncedQuery.trim()) searchParams.append("search", debouncedQuery);
         if (filters.province) searchParams.append("province", filters.province);
         if (filters.city) searchParams.append("city", filters.city);
         if (filters.specialty)
@@ -264,7 +281,7 @@ export default function SearchInPage() {
 
     // Only fetch if there's a search query or active filters
     if (
-      query.trim() ||
+      debouncedQuery.trim() ||
       filters.province ||
       filters.city ||
       filters.specialty ||
@@ -277,7 +294,7 @@ export default function SearchInPage() {
       setLoading(false);
     }
   }, [
-    query,
+    debouncedQuery,
     filters.province,
     filters.city,
     filters.specialty,
@@ -292,7 +309,7 @@ export default function SearchInPage() {
     setResults([]);
     setSearchPagination((prev) => ({ ...prev, skip: 0, hasMore: true }));
   }, [
-    query,
+    debouncedQuery,
     filters.province,
     filters.city,
     filters.specialty,
@@ -319,7 +336,7 @@ export default function SearchInPage() {
   // Check if any filter is active
   const hasActiveFilters =
     filters.province || filters.city || filters.specialty || filters.rating;
-  const isSearching = query || hasActiveFilters;
+  const isSearching = debouncedQuery || hasActiveFilters;
 
   // Render barber card with proper ref for infinite scrolling
   const renderBarberCard = (barber, index, array, isTopRated = false) => {
@@ -425,7 +442,6 @@ export default function SearchInPage() {
           }} className="bg-black text-white text-sm font-medium px-4 py-2 rounded-md hover:bg-gray-800 transition">
             Book now
           </button>
-          {/* <BookNow barber={barber} /> */}
         </div>
       </motion.div>
     );
@@ -450,6 +466,16 @@ export default function SearchInPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
+          {query && (
+            <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+              <button
+                onClick={() => setQuery("")}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+          )}
         </div>
         <button
           onClick={() => setShowFilters(true)}
@@ -660,6 +686,9 @@ export default function SearchInPage() {
 </>
   );
 }
+
+
+
 // "use client";
 // import { useState, useEffect, useRef, useCallback } from "react";
 // import BookNow from "../bookNow";
@@ -682,10 +711,7 @@ export default function SearchInPage() {
 // // Skeleton Loading Components
 // const BarberCardSkeleton = () => (
 //   <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-//     {/* Image Skeleton */}
 //     <div className="w-full h-40 bg-gray-200 animate-pulse"></div>
-    
-//     {/* Content Skeleton */}
 //     <div className="p-5">
 //       <div className="flex justify-between items-start mb-4">
 //         <div className="space-y-2">
@@ -694,16 +720,12 @@ export default function SearchInPage() {
 //         </div>
 //         <div className="h-6 bg-gray-200 rounded w-16 animate-pulse"></div>
 //       </div>
-      
-//       {/* Services Skeleton */}
 //       <div className="flex flex-wrap gap-2 mt-4">
 //         {[...Array(3)].map((_, i) => (
 //           <div key={i} className="h-8 bg-gray-200 rounded-full w-24 animate-pulse"></div>
 //         ))}
 //       </div>
 //     </div>
-    
-//     {/* Footer Skeleton */}
 //     <div className="px-5 py-4 border-t border-gray-200 flex justify-between items-center">
 //       <div className="h-4 bg-gray-200 rounded w-20 animate-pulse"></div>
 //       <div className="h-8 bg-gray-200 rounded w-20 animate-pulse"></div>
@@ -731,6 +753,10 @@ export default function SearchInPage() {
 // );
 
 // export default function SearchInPage() {
+
+//   const [BookingComponent, setBookingComponent] = useState(false);
+//   const [barberdata, setbarberdata] = useState(null);
+//   console.log(barberdata,"this is the barber data ")
 //   // State for search and filters
 //   const [query, setQuery] = useState("");
 //   const [results, setResults] = useState([]);
@@ -789,7 +815,7 @@ export default function SearchInPage() {
 //           }
 //         },
 //         { threshold: 0.1 }
-//       ); // Lower threshold for earlier detection
+//       );
 //       if (node) searchObserver.current.observe(node);
 //     },
 //     [loading, searchPagination.hasMore]
@@ -815,7 +841,7 @@ export default function SearchInPage() {
 //           }
 //         },
 //         { threshold: 0.1 }
-//       ); // Lower threshold for earlier detection
+//       );
 //       if (node) topRatedObserver.current.observe(node);
 //     },
 //     [topRatedLoading, topRatedPagination.hasMore]
@@ -1084,19 +1110,20 @@ export default function SearchInPage() {
 //           >
 //             View Profile <ChevronRight className="h-4 w-4 ml-1 text-black" />
 //           </Link>
-//           <motion.div
-//             whileTap={{ scale: 0.95 }}
-//             className="px-4 py-1.5 bg-black text-white text-sm rounded-md hover:bg-gray-800 transition-colors"
-//           >
-//            <BookNow barber={barber} />
-//             {/* <BookNow barber={barber} /> */}
-//           </motion.div>
+//           <button onClick={() => {
+//             setBookingComponent(!BookingComponent)
+//             setbarberdata(barber);
+//           }} className="bg-black text-white text-sm font-medium px-4 py-2 rounded-md hover:bg-gray-800 transition">
+//             Book now
+//           </button>
+//           {/* <BookNow barber={barber} /> */}
 //         </div>
 //       </motion.div>
 //     );
 //   };
 
 //   return (
+//     <>
 //     <div className="p-6 max-w-[1200px] mx-auto">
 //       <h1 className="text-3xl font-bold mb-6 text-gray-800">
 //         Find Your Perfect Barber
@@ -1110,7 +1137,7 @@ export default function SearchInPage() {
 //           <input
 //             type="text"
 //             placeholder="Search by name, location, or service..."
-//             className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+//             className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-colors"
 //             value={query}
 //             onChange={(e) => setQuery(e.target.value)}
 //           />
@@ -1292,7 +1319,7 @@ export default function SearchInPage() {
 //                   strokeLinejoin="round"
 //                   strokeWidth={2}
 //                   d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-//                 />
+//                   />
 //               </svg>
 //               <h3 className="mt-2 text-lg font-medium text-gray-900">
 //                 No barbers found
@@ -1304,7 +1331,7 @@ export default function SearchInPage() {
 //                 <button
 //                   onClick={handleResetFilters}
 //                   className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-//                 >
+//                   >
 //                   Reset All Filters
 //                 </button>
 //               </div>
@@ -1313,5 +1340,14 @@ export default function SearchInPage() {
 //         </>
 //       )}
 //     </div>
+//     {BookingComponent && (
+//   <div >
+//     <div>
+//       {barberdata && <BookNow handleClose={setBookingComponent} barber={barberdata} />}
+//     </div>
+//   </div>
+// )}
+
+// </>
 //   );
 // }
