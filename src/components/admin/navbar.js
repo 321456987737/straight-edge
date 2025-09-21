@@ -4,8 +4,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell, Home, Calendar, Users, Scissors, BarChart3 } from "lucide-react";
-
+import { Bell, Home, Calendar, Users, Scissors, BarChart3, Settings } from "lucide-react";
+import { useState, useEffect } from "react";
 export default function AdminNavbar() {
   const pathname = usePathname() || "";
 
@@ -24,10 +24,17 @@ export default function AdminNavbar() {
     { label: "Barbers", icon: Scissors, href: "/admin/barbers" },
     { label: "Reports", icon: BarChart3, href: "/admin/report" },
   ];
-
+  const [settingscolor, setsettingscolor] = useState(false)
   // ✅ Active path check
   const isActive = (href) => pathname === href;
-
+  useEffect(() => {
+    if (pathname === "/admin/settings") {
+      setsettingscolor(true)
+    }else{
+      setsettingscolor(false)
+    }
+  }, [pathname])
+  
   return (
     <>
       {/* Top Navbar */}
@@ -63,7 +70,10 @@ export default function AdminNavbar() {
             <div className="hidden sm:block text-sm font-semibold">
               Admin panel
             </div>
-            <Bell className="w-5 h-5 text-gray-400" />
+            <Link href={"/admin/settings"}>
+
+            <Settings  className={`w-5 h-5  text-gray-400  ${settingscolor ? "text-white underline-offset-8 " : ""}`} />
+            </Link>
           </div>
         </div>
       </motion.nav>
@@ -92,102 +102,3 @@ export default function AdminNavbar() {
   );
 }
 
-
-
-// "use client";
-// import { motion } from "framer-motion";
-// import Link from "next/link";
-// import { usePathname } from "next/navigation";
-// import {
-//   Bell,
-//   MessageSquare,
-//   Home,
-//   Calendar,
-//   Users,
-//   Scissors,
-//   BarChart3,
-// } from "lucide-react";
-
-// export default function Page() {
-//   const pathname = usePathname();
-
-//   // ✅ Unified nav links with hrefs
-//   const navLinks = [
-//     { label: "Dashboard", href: "/admin" },
-//     { label: "Appointments", href: "/admin/appointments" },
-//     { label: "Clients", href: "/admin/customers" },
-//     { label: "Barbers", href: "/admin/barbers" },
-//     { label: "Reports", href: "/admin/reports" },
-//   ];
-
-//   const bottomNavItems = [
-//     { label: "Home", icon: Home, href: "/admin" },
-//     { label: "Bookings", icon: Calendar, href: "/admin/appointments" },
-//     { label: "Clients", icon: Users, href: "/admin/customers" },
-//     { label: "Barbers", icon: Scissors, href: "/admin/barbers" },
-//     { label: "Reports", icon: BarChart3, href: "/admin/reports" },
-//   ];
-
-//   return (
-//     <div className=" flex flex-col text-white w-full">
-//       {/* Top Navbar */}
-//       <motion.nav
-//         className="sticky top-0 z-[1000] w-full flex items-center justify-between px-6 lg:px-12 py-4 bg-black border-b border-white/10"
-//       >
-//         {/* Logo */}
-//         <img
-//           src="/namelogo.png"
-//           alt="logo"
-//           className="w-32 object-contain invert brightness-0"
-//         />
-
-//         {/* Desktop Nav */}
-//         <div className="hidden lg:flex gap-2">
-//           {navLinks.map(({ label, href }) => (
-//             <Link
-//               href={href}
-//               key={label}
-//               className={`px-4 py-2 rounded-lg font-medium transition ${
-//                 pathname === href
-//                   ? "bg-white text-black"
-//                   : "text-gray-400 hover:text-white hover:bg-white/10"
-//               }`}
-//               aria-current={pathname === href ? "page" : undefined}
-//             >
-//               {label}
-//             </Link>
-//           ))}
-//         </div>
-
-//         {/* Top Actions */}
-//         <div className="text-lg font-semibold">
-//           Admin panel
-//         </div>
-  
-//       </motion.nav>
-
-//       {/* Spacer */}
-//       <div className="flex-1" />
-
-     
-//  <motion.nav
-//   className="fixed bottom-0 z-[100] left-0 w-screen flex justify-evenly items-center bg-black border-t border-white/10 py-3 lg:hidden"
-// >
-//   {bottomNavItems.map(({ label, icon: Icon, href }) => (
-//     <Link
-//       key={label}
-//       href={href}
-//       className={`flex flex-col items-center py-2 rounded-xl transition text-center ${
-//         pathname === href ? "bg-white text-black" : "text-gray-400"
-//       }`}
-//       aria-current={pathname === href ? "page" : undefined}
-//     >
-//       <Icon className="w-5 h-5 mb-1" />
-//       <span className="text-xs font-medium">{label}</span>
-//     </Link>
-//   ))}
-// </motion.nav>
-
-//     </div>
-//   );
-// }

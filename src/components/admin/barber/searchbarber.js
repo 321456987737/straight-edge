@@ -69,7 +69,19 @@ const Searchbarbers = () => {
       console.error("Restrict failed:", err);
     }
   };
-
+const handleChangeRole = async (id, newRole) => {
+  try {
+    await axios.put(`/api/admin/changeroleforbarber`, { id, role: newRole });
+    setbarbers((prev) =>
+      prev.map((c) => (c._id === id ? { ...c, role: newRole } : c))
+    );
+    if (selectedbarber?._id === id) {
+      setSelectedCustomer({ ...selectedbarber, role: newRole });
+    }
+  } catch (err) {
+    console.error("Role change failed:", err);
+  }
+};
   return (
     <div className="p-6 space-y-6 w-full max-w-7xl">
       {/* 🔍 Search */}
@@ -90,7 +102,7 @@ const Searchbarbers = () => {
       ) : barbers.length === 0 && query ? (
         <p className="text-gray-500">No barbers found.</p>
       ) : (
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-6">
           {barbers.map((barber) => (
             <motion.div
               key={barber._id}
@@ -117,6 +129,8 @@ const Searchbarbers = () => {
               <p className="text-gray-500 text-sm">{barber.email}</p>
 
               {/* Actions */}
+              <div>
+
               <div className="flex gap-3 mt-4">
                 <button
                   onClick={() => handleDelete(barber._id)}
@@ -128,8 +142,8 @@ const Searchbarbers = () => {
                   onClick={() => handleRestrict(barber._id)}
                   className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm transition ${
                     barber.restricted
-                      ? "bg-gray-600 text-white hover:bg-gray-700"
-                      : "bg-yellow-500 text-white hover:bg-yellow-600"
+                    ? "bg-gray-600 text-white hover:bg-gray-700"
+                    : "bg-yellow-500 text-white hover:bg-yellow-600"
                   }`}
                 >
                   <Ban className="w-4 h-4" />
@@ -138,11 +152,23 @@ const Searchbarbers = () => {
                 <button
                   onClick={() => setSelectedbarber(barber)}
                   className="flex items-center gap-1 bg-blue-500 text-white px-3 py-1.5 rounded-lg text-sm hover:bg-blue-600 transition"
-                >
+                  >
                   <User className="w-4 h-4" />
                   View Profile
                 </button>
               </div>
+              <div className="w-full">
+                 <select
+    onChange={(e) => handleChangeRole(barber._id, e.target.value)}
+    value={barber.role}
+    className="mt-2 px-3 py-1.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black"
+  >
+    <option value="user">Barber</option>
+    <option value="admin">Admin</option>
+    <option value="moderator">Moderator</option>
+  </select>
+              </div>
+                  </div>
             </motion.div>
           ))}
         </div>
