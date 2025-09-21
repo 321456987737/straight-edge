@@ -70,19 +70,19 @@ const SearchCustomers = () => {
     }
   };
   // ✅ Change Role
-const handleChangeRole = async (id, newRole) => {
-  try {
-    await axios.put(`/api/admin/changerole`, { id, role: newRole });
-    setCustomers((prev) =>
-      prev.map((c) => (c._id === id ? { ...c, role: newRole } : c))
-    );
-    if (selectedCustomer?._id === id) {
-      setSelectedCustomer({ ...selectedCustomer, role: newRole });
+  const handleChangeRole = async (id, newRole) => {
+    try {
+      await axios.put(`/api/admin/changerole`, { id, role: newRole });
+      setCustomers((prev) =>
+        prev.map((c) => (c._id === id ? { ...c, role: newRole } : c))
+      );
+      if (selectedCustomer?._id === id) {
+        setSelectedCustomer({ ...selectedCustomer, role: newRole });
+      }
+    } catch (err) {
+      console.error("Role change failed:", err);
     }
-  } catch (err) {
-    console.error("Role change failed:", err);
-  }
-};
+  };
 
   return (
     <div className="p-6 space-y-6 w-full max-w-7xl">
@@ -131,46 +131,48 @@ const handleChangeRole = async (id, newRole) => {
               <p className="text-gray-500 text-sm">{customer.email}</p>
 
               {/* Actions */}
-             {/* Actions */}
-<div className="flex flex-col gap-2 mt-4 w-full items-center justify-center">
-  <div className="flex gap-3 justify-center">
-    <button
-      onClick={() => handleDelete(customer._id)}
-      className="flex items-center gap-1 bg-red-500 text-white px-3 py-1.5 rounded-lg text-sm hover:bg-red-600 transition"
-    >
-      <Trash2 className="w-4 h-4" /> Delete
-    </button>
-    <button
-      onClick={() => handleRestrict(customer._id)}
-      className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm transition ${
-        customer.restricted
-          ? "bg-gray-600 text-white hover:bg-gray-700"
-          : "bg-yellow-500 text-white hover:bg-yellow-600"
-      }`}
-    >
-      <Ban className="w-4 h-4" />
-      {customer.restricted ? "Unrestrict" : "Restrict"}
-    </button>
-    <button
-      onClick={() => setSelectedCustomer(customer)}
-      className="flex items-center gap-1 bg-blue-500 text-white px-3 py-1.5 rounded-lg text-sm hover:bg-blue-600 transition"
-    >
-      <User className="w-4 h-4" />
-      View Profile
-    </button>
-  </div>
+              {/* Actions */}
+              <div className="flex flex-col gap-2 mt-4 w-full items-center justify-center">
+                <div className="flex gap-3 justify-center">
+                  <button
+                    onClick={() => handleDelete(customer._id)}
+                    className="flex items-center gap-1 bg-red-500 text-white px-3 py-1.5 rounded-lg text-sm hover:bg-red-600 transition"
+                  >
+                    <Trash2 className="w-4 h-4" /> Delete
+                  </button>
+                  <button
+                    onClick={() => handleRestrict(customer._id)}
+                    className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm transition ${
+                      customer.restricted
+                        ? "bg-gray-600 text-white hover:bg-gray-700"
+                        : "bg-yellow-500 text-white hover:bg-yellow-600"
+                    }`}
+                  >
+                    <Ban className="w-4 h-4" />
+                    {customer.restricted ? "Unrestrict" : "Restrict"}
+                  </button>
+                  <button
+                    onClick={() => setSelectedCustomer(customer)}
+                    className="flex items-center gap-1 bg-blue-500 text-white px-3 py-1.5 rounded-lg text-sm hover:bg-blue-600 transition"
+                  >
+                    <User className="w-4 h-4" />
+                    View Profile
+                  </button>
+                </div>
 
-  {/* 🔹 Change Role Button */}
-  <select
-    onChange={(e) => handleChangeRole(customer._id, e.target.value)}
-    value={customer.role}
-    className="mt-2 w-[112px]  px-3 py-1.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black"
-  >
-    <option value="user">User</option>
-    <option value="admin">Admin</option>
-    <option value="moderator">Moderator</option>
-  </select>
-</div>
+                {/* 🔹 Change Role Button */}
+                <select
+                  onChange={(e) =>
+                    handleChangeRole(customer._id, e.target.value)
+                  }
+                  value={customer.role}
+                  className="mt-2 w-[112px]  px-3 py-1.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black"
+                >
+                  <option value="user">User</option>
+                  <option value="admin">Admin</option>
+                  <option value="moderator">Moderator</option>
+                </select>
+              </div>
 
               {/* <div className="flex gap-3 mt-4">
                 <button
@@ -205,7 +207,10 @@ const handleChangeRole = async (id, newRole) => {
 
       {/* 🔹 Popup Modal */}
       {selectedCustomer && (
-        <div onClick={() => setSelectedCustomer(null)} className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+        <div
+          onClick={() => setSelectedCustomer(null)}
+          className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
+        >
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -286,4 +291,3 @@ const handleChangeRole = async (id, newRole) => {
 };
 
 export default SearchCustomers;
-
