@@ -14,7 +14,7 @@ export default function AdminNavbar() {
     { label: "Appointments", href: "/admin/appointments" },
     { label: "Clients", href: "/admin/customers" },
     { label: "Barbers", href: "/admin/barbers" },
-    { label: "Reports", href: "/admin/reports" },
+    { label: "Reports", href: "/admin/report" },
   ];
 
   const bottomNavItems = [
@@ -22,7 +22,7 @@ export default function AdminNavbar() {
     { label: "Bookings", icon: Calendar, href: "/admin/appointments" },
     { label: "Clients", icon: Users, href: "/admin/customers" },
     { label: "Barbers", icon: Scissors, href: "/admin/barbers" },
-    { label: "Reports", icon: BarChart3, href: "/admin/reports" },
+    { label: "Reports", icon: BarChart3, href: "/admin/report" },
   ];
 
   // ✅ Active path check
