@@ -12,7 +12,7 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
-
+import { useState,useEffect } from "react";
 const menuItems = [
   { id: "/barber", label: "Dashboard", icon: LayoutDashboard },
   { id: "/barber/appointment", label: "Appointments", icon: CalendarDays },
@@ -24,8 +24,15 @@ export default function Navbar({ profileImage }) {
   const pathname = usePathname();
   const { data: session } = useSession();
   const id = session?.user?.id || session?.user?._id;
-
-  return (
+  const [isopen, setisopen] = useState(false)
+  useEffect(() => {
+if (pathname.startsWith("/barber/profile") || pathname === "/barber/profile") {
+    setisopen(true)
+}else{
+    setisopen(false)
+}
+}, [pathname])
+    return (
     <>
       {/* ===== Top Navbar ===== */}
       <motion.header 
@@ -90,7 +97,7 @@ export default function Navbar({ profileImage }) {
                 className="rounded-full border-2 border-gray-700 hover:border-white transition"
               />
             ) : (
-              <div className="p-1 rounded-full border-2 border-gray-700 hover:border-white transition">
+              <div className={`p-1 rounded-full border-2 border-gray-700 hover:border-white transition ${isopen ? "border-2 border-white" : ""}`}>
                 <UserIcon size={22} className="text-white" />
               </div>
             )}

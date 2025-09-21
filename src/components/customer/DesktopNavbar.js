@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
+import { useState,useEffect } from "react";
 import BarberSearch from "@/components/customer/search/search";
 import { Home, UserIcon, Scissors, Users, CalendarDays, AlertCircle } from "lucide-react";
 const navItems = [
@@ -18,6 +19,15 @@ export default function Navbar({ profileImage }) {
   const pathname = usePathname();
   const { data: session } = useSession();
   const id = session?.user?.id || session?.user?._id;
+const [userprofilepage, setUserprofilepage] = useState(false)
+  useEffect(() => {
+if (pathname.startsWith("/customer/profile") || pathname === "/customer/profile") {
+    setUserprofilepage(true)
+}else{
+    setUserprofilepage(false)
+}
+}, [pathname])
+
 
   return (
     <>
@@ -86,11 +96,11 @@ export default function Navbar({ profileImage }) {
               alt="Profile"
               width={22}
               height={22}
-                className="rounded-full border-2 border-gray-700 hover:border-white transition"
+                className={`rounded-full border-2 border-gray-700 hover:border-white transition ${userprofilepage?"border-2 border-white":""}`}
               />
             ) : (
-              <div className="p-1 rounded-full border-2 border-gray-700 hover:border-white transition">
-                <UserIcon size={22} className="text-white" />
+              <div className={`p-1 rounded-full border-2 border-gray-700 hover:border-white transition ${userprofilepage?"border-2 border-white":""}`}>
+                <UserIcon  className={`w-6 h-6 text-white ${userprofilepage?"w-6 h-6":""}`} />
               </div>
             )}
           </motion.div>
