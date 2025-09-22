@@ -579,9 +579,6 @@ export default function Page() {
             </div>
           </div>
            <div className="w-full flex items-center justify-center mt-12">
-        <button onClick={() => signOut()} className="border-2 border-red-500 text-red-500 py-2 px-4 rounded-lg hover:bg-red-500 hover:text-white transition ">
-          Sign Out
-        </button>
       </div>
 
           {error && <div className="mt-4 text-xs text-red-500">{error}</div>}
