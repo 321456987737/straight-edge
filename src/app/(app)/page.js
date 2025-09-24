@@ -19,9 +19,16 @@ const Page = () => {
 
   const handleClick = (type) => {
     setSelected(type);
-    setTimeout(() => {
+    if (session?.user?.role === type) {
+   setTimeout(() => {
+    
+     router.push(`/${type}`);
+   }, 800);
+    }else{
+      setTimeout(() => {
       router.push(`/signup?type=${type}`);
     }, 800); // keep animation in sync
+  }
   };
 
   // Desktop polygons

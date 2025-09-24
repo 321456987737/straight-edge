@@ -207,13 +207,13 @@ const ProfilePage = () => {
     <div className="relative min-h-screen mb-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-gray-900 bg-white rounded-xl">
       {/* Profile Header */}
       <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
-        {user?.image?.url ? (
+        {user?.image ? (
           <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden">
-            <Image
-              src={user.image.url}
+            <img
+              src={user.image[0].url}
               alt={user.image.alt || user.username}
-              fill
-              className="object-cover"
+            
+              className="object-cover h-full w-full "
             />
           </div>
         ) : (
@@ -434,7 +434,7 @@ const ProfilePage = () => {
       </section>
 
       {/* Portfolio */}
-      <section ref={portfolioRef} className="mt-12">
+      <section ref={portfolioRef} className="mt-12 mb-24">
         <motion.h2 
           initial={{ opacity: 0, y: 10 }} 
           animate={{ opacity: 1, y: 0 }}
@@ -447,11 +447,11 @@ const ProfilePage = () => {
             {user.portfolio.map((item, i) => (
               <div key={i} className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden shadow-md transition-transform hover:scale-105">
                 {item.url ? (
-                  <Image 
+                  <img 
                     src={item.url} 
                     alt={item.alt || `Portfolio image ${i+1}`} 
-                    fill
-                    className="object-cover"
+                 
+                    className="object-cover h-full w-full"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">

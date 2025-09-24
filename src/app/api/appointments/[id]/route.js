@@ -16,7 +16,7 @@ export async function GET(req, { params }) {
     if (!appointments || appointments.length === 0) {
       return NextResponse.json(
         { message: "No appointments found" }, 
-        { status: 404 }
+        { status: 200 }
       );
     }
 

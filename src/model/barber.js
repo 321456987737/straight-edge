@@ -76,13 +76,13 @@ const barberSchema = new mongoose.Schema(
       alt: { type: String },
     },
 
-    portfolio: [
-      {
-        fileId: { type: String },
-        url: { type: String },
-        alt: { type: String },
-      },
-    ],
+     portfolio: [
+    {
+      url: { type: String, required: true },
+      fileId: { type: String, required: true },
+      thumbnailUrl: { type: String, required: true },
+    }
+  ],
     services: {
       type: [
         {

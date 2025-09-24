@@ -153,30 +153,34 @@ export default function TopRatedBarbersPage() {
     const ref = isLastElement ? lastTopRatedBarberRef : null;
 
     return (
-      <motion.div
+     <motion.div
         ref={ref}
         key={barber._id}
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
         whileHover={{ scale: 1.02 }}
-        className="bg-white rounded-lg border  border-black/20 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between"
+        className="bg-white w-full  rounded-tr-full rounded-tl-full  border justify-center border-black/20 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col "
       >
+       
         {/* Image Section */}
-        <div className="w-full h-40 bg-gray-100 rounded-lg flex items-center justify-center border-b border-black/20">
+        <div className="w-full flex items-center justify-center ">
+
+        <div className="w-32 h-32 mt-4 rounded-full bg-gray-100  flex items-center justify-center border-b border-black/20">
           {barber.image ? (
-            <Image
-              src={barber.image}
-              alt={barber.username}
-              width={300}
-              height={160}
-              className="w-full h-full object-cover"
+            <img
+            src={barber.image[0].url}
+            alt={barber.username}
+            width={300}
+            height={160}
+            className="w-full h-full object-cover rounded-full"
             />
           ) : (
             <User className="h-16 w-16 text-gray-600" />
           )}
         </div>
-
+          </div>
+ <div className="bg-gray-200 h-0.5 w-[75%] mx-auto mt-2"/>
         {/* Content */}
         <div className="p-5 flex-1">
           <div className="flex justify-between items-start">
@@ -230,7 +234,7 @@ export default function TopRatedBarbersPage() {
           </div>
         </div>
 
-        {/* Footer */}
+        {/* Footer always aligned */}
         <div className="px-5 py-4 border-t border-black/20 flex justify-between items-center">
           <Link
             href={`/customer/viewbarberProfile/${barber._id}`}

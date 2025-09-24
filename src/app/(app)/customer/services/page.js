@@ -171,99 +171,195 @@ export default function ServicesPage() {
     const ref = isLastElement ? lastBarberRef : null;
 
     return (
-      <motion.div
-        ref={ref}
-        key={barber._id}
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
-        whileHover={{ scale: 1.02 }}
-        className="bg-white rounded-lg border  border-black/20 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between"
-      >
-        {/* Image Section */}
-        <div className="w-full h-40 bg-gray-100 rounded-lg flex items-center justify-center border-b border-black/20">
-          {barber.image ? (
-            <Image
-              src={barber.image}
-              alt={barber.username}
-              width={300}
-              height={160}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <User className="h-16 w-16 text-gray-600" />
-          )}
-        </div>
-
-        {/* Content */}
-        <div className="p-5 flex-1">
-          <div className="flex justify-between items-start">
-            <div>
-              <h3 className="text-lg font-semibold text-black">
-                {barber.username}
-              </h3>
-              <p className="text-sm text-gray-700 mt-1">
-                <MapPin className="inline-block h-4 w-4 mr-1 text-black" />
-                {barber.city}, {barber.province}
-              </p>
-            </div>
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border border-black text-black bg-white">
-              {barber.rating > 0 ? (
-                <>
-                  {barber.rating}{" "}
-                  <Star className="h-3 w-3 ml-1 fill-black text-black" />
-                </>
-              ) : (
-                "New"
-              )}
-            </span>
-          </div>
-
-          {/* Services */}
-          <div className="mt-4">
-            {barber.services &&
-              barber.services.length > 0 &&
-              barber.services.slice(0, 3).map((service, idx) => (
-                <motion.span
-                  key={idx}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 + idx * 0.1, duration: 0.3 }}
-                  className="inline-block border border-black rounded-full px-3 py-1 text-sm font-medium text-black mr-2 mb-2"
-                >
-                  <Scissors className="inline-block h-3 w-3 mr-1 text-black" />
-                  {service.name} - ${service.price}
-                </motion.span>
-              ))}
-            {barber.services && barber.services.length > 3 && (
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5, duration: 0.3 }}
-                className="inline-block border border-black rounded-full px-3 py-1 text-sm font-medium text-black"
-              >
-                +{barber.services.length - 3} more
-              </motion.span>
-            )}
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="px-5 py-4 border-t border-black/20 flex justify-between items-center">
-          <Link
-            href={`/customer/viewbarberProfile/${barber._id}`}
-            className="text-sm font-medium text-black hover:underline flex items-center"
+    <motion.div
+            ref={ref}
+            key={barber._id}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            whileHover={{ scale: 1.02 }}
+            className="bg-white w-full rounded-tr-full rounded-tl-full  border justify-center border-black/20 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col "
           >
-            View Profile <ChevronRight className="h-4 w-4 ml-1 text-black" />
-          </Link>
-          <button onClick={() => {
-            setBookingComponent(!BookingComponent)
-            setbarberdata(barber);
-          }} className="bg-black text-white text-sm font-medium px-4 py-2 rounded-md hover:bg-gray-800 transition">
-            Book now
-          </button>
-        </div>
-      </motion.div>
+            {/* Image Section */}
+            <div className="w-full flex items-center justify-center ">
+    
+            <div className="w-32 h-32 mt-4 rounded-full bg-gray-100  flex items-center justify-center border-b border-black/20">
+              {barber.image ? (
+                <img
+                src={barber.image[0].url}
+                alt={barber.username}
+                width={300}
+                height={160}
+                className="w-full h-full object-cover rounded-full"
+                />
+              ) : (
+                <User className="h-16 w-16 text-gray-600" />
+              )}
+            </div>
+              </div>
+    
+            {/* Content */}
+            <div className="p-5 flex-1">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="text-lg font-semibold text-black">
+                    {barber.username}
+                  </h3>
+                  <p className="text-sm text-gray-700 mt-1">
+                    <MapPin className="inline-block h-4 w-4 mr-1 text-black" />
+                    {barber.city}, {barber.province}
+                  </p>
+                </div>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border border-black text-black bg-white">
+                  {barber.rating > 0 ? (
+                    <>
+                      {barber.rating}{" "}
+                      <Star className="h-3 w-3 ml-1 fill-black text-black" />
+                    </>
+                  ) : (
+                    "New"
+                  )}
+                </span>
+              </div>
+    
+              {/* Services */}
+              <div className="mt-4">
+                {barber.services &&
+                  barber.services.length > 0 &&
+                  barber.services.slice(0, 3).map((service, idx) => (
+                    <motion.span
+                      key={idx}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 + idx * 0.1, duration: 0.3 }}
+                      className="inline-block border border-black rounded-full px-3 py-1 text-sm font-medium text-black mr-2 mb-2"
+                    >
+                      <Scissors className="inline-block h-3 w-3 mr-1 text-black" />
+                      {service.name} - ${service.price}
+                    </motion.span>
+                  ))}
+                {barber.services && barber.services.length > 3 && (
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5, duration: 0.3 }}
+                    className="inline-block border border-black rounded-full px-3 py-1 text-sm font-medium text-black"
+                  >
+                    +{barber.services.length - 3} more
+                  </motion.span>
+                )}
+              </div>
+            </div>
+    
+            {/* Footer always aligned */}
+            <div className="px-5 py-4 border-t border-black/20 flex justify-between items-center">
+              <Link
+                href={`/customer/viewbarberProfile/${barber._id}`}
+                className="text-sm font-medium text-black hover:underline flex items-center"
+              >
+                View Profile <ChevronRight className="h-4 w-4 ml-1 text-black" />
+              </Link>
+              <button onClick={() => {
+                setBookingComponent(!BookingComponent)
+                setbarberdata(barber);
+              }} className="bg-black text-white text-sm font-medium px-4 py-2 rounded-md hover:bg-gray-800 transition">
+                Book now
+              </button>
+            </div>
+          </motion.div>
+      // <motion.div
+      //   ref={ref}
+      //   key={barber._id}
+      //   initial={{ opacity: 0, y: 40 }}
+      //   animate={{ opacity: 1, y: 0 }}
+      //   transition={{ duration: 0.4, ease: "easeOut" }}
+      //   whileHover={{ scale: 1.02 }}
+      //   className="bg-white rounded-lg border  border-black/20 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between"
+      // >
+      //   {/* Image Section */}
+      //   <div className="w-full h-40 bg-gray-100 rounded-lg flex items-center justify-center border-b border-black/20">
+      //     {barber.image ? (
+      //       <Image
+      //         src={barber.image}
+      //         alt={barber.username}
+      //         width={300}
+      //         height={160}
+      //         className="w-full h-full object-cover"
+      //       />
+      //     ) : (
+      //       <User className="h-16 w-16 text-gray-600" />
+      //     )}
+      //   </div>
+
+      //   {/* Content */}
+      //   <div className="p-5 flex-1">
+      //     <div className="flex justify-between items-start">
+      //       <div>
+      //         <h3 className="text-lg font-semibold text-black">
+      //           {barber.username}
+      //         </h3>
+      //         <p className="text-sm text-gray-700 mt-1">
+      //           <MapPin className="inline-block h-4 w-4 mr-1 text-black" />
+      //           {barber.city}, {barber.province}
+      //         </p>
+      //       </div>
+      //       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border border-black text-black bg-white">
+      //         {barber.rating > 0 ? (
+      //           <>
+      //             {barber.rating}{" "}
+      //             <Star className="h-3 w-3 ml-1 fill-black text-black" />
+      //           </>
+      //         ) : (
+      //           "New"
+      //         )}
+      //       </span>
+      //     </div>
+
+      //     {/* Services */}
+      //     <div className="mt-4">
+      //       {barber.services &&
+      //         barber.services.length > 0 &&
+      //         barber.services.slice(0, 3).map((service, idx) => (
+      //           <motion.span
+      //             key={idx}
+      //             initial={{ opacity: 0, y: 10 }}
+      //             animate={{ opacity: 1, y: 0 }}
+      //             transition={{ delay: 0.2 + idx * 0.1, duration: 0.3 }}
+      //             className="inline-block border border-black rounded-full px-3 py-1 text-sm font-medium text-black mr-2 mb-2"
+      //           >
+      //             <Scissors className="inline-block h-3 w-3 mr-1 text-black" />
+      //             {service.name} - ${service.price}
+      //           </motion.span>
+      //         ))}
+      //       {barber.services && barber.services.length > 3 && (
+      //         <motion.span
+      //           initial={{ opacity: 0 }}
+      //           animate={{ opacity: 1 }}
+      //           transition={{ delay: 0.5, duration: 0.3 }}
+      //           className="inline-block border border-black rounded-full px-3 py-1 text-sm font-medium text-black"
+      //         >
+      //           +{barber.services.length - 3} more
+      //         </motion.span>
+      //       )}
+      //     </div>
+      //   </div>
+
+      //   {/* Footer */}
+      //   <div className="px-5 py-4 border-t border-black/20 flex justify-between items-center">
+      //     <Link
+      //       href={`/customer/viewbarberProfile/${barber._id}`}
+      //       className="text-sm font-medium text-black hover:underline flex items-center"
+      //     >
+      //       View Profile <ChevronRight className="h-4 w-4 ml-1 text-black" />
+      //     </Link>
+      //     <button onClick={() => {
+      //       setBookingComponent(!BookingComponent)
+      //       setbarberdata(barber);
+      //     }} className="bg-black text-white text-sm font-medium px-4 py-2 rounded-md hover:bg-gray-800 transition">
+      //       Book now
+      //     </button>
+      //   </div>
+      // </motion.div>
     );
   };
 

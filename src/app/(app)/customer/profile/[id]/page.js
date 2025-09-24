@@ -19,7 +19,9 @@ import {
   Users,
   ChevronDown,
   ChevronUp,
+  User,
 } from "lucide-react";
+import ImageUpload from "@/components/imagekit/uploadimage";
 
 const InfoRow = ({ label, value }) => (
   <div className="flex items-start justify-between py-4 border-b border-gray-200">
@@ -77,7 +79,7 @@ export default function Page() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [expandedSection, setExpandedSection] = useState(null);
-
+  const [imageFiles, setimageFiles] = useState(null);
   // Form state
   const [formData, setFormData] = useState({
     username: "",
@@ -88,6 +90,7 @@ export default function Page() {
     location: "",
     password: "",
     confirmPassword: "",
+    profilepic: {},
   });
 
   useEffect(() => {
@@ -99,7 +102,7 @@ export default function Page() {
       try {
         const res = await axios.get(`/api/customerdata/${id}`);
         setCustomerdata(res.data?.customerData ?? null);
-
+        setimageFiles(res.data.customerData.profilepic);
         // Pre-fill form with existing data
         if (res.data?.customerData) {
           setFormData({
@@ -156,6 +159,35 @@ export default function Page() {
       [name]: value,
     });
   };
+  const uploadImages = async (files) => {
+    // If files is already an array (existing image from DB), return it
+    if (Array.isArray(files)) {
+      return files;
+    }
+
+    // If it's a File object, upload it
+    const formData = new FormData();
+    formData.append("images", files);
+
+    try {
+      const response = await axios.post("/api/upload", formData);
+      return response.data.images; // array of {url, fileId}
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      throw new Error("Image upload failed");
+    }
+  };
+
+  const deleteImageFromImageKit = async (fileId) => {
+    try {
+      await axios.delete("/api/upload", {
+        data: { fileId },
+      });
+    } catch (error) {
+      console.error("Error deleting image:", error);
+      // Don't throw error here, just log it
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -171,7 +203,25 @@ export default function Page() {
     }
 
     try {
-      // Create update object with only changed fields
+      let uploadedImages = null;
+      const hasNewImage = imageFiles && !Array.isArray(imageFiles);
+      console.log(hasNewImage, "hasNewImage");
+      if (hasNewImage) {
+        uploadedImages = [];
+        console.log(customerdata, "customerdata");
+        // Delete old image if it exists
+        if (customerdata?.profilepic?.[0]?.fileId) {
+          console.log(
+            customerdata.profilepic[0].fileId,
+            "customerdata.profilepic[0].fileId"
+          );
+          await deleteImageFromImageKit(customerdata.profilepic[0].fileId);
+        }
+      } 
+        uploadedImages = await uploadImages(imageFiles);
+        // User removed the image
+
+
       const updateData = {
         username: formData.username,
         email: formData.email,
@@ -181,18 +231,27 @@ export default function Page() {
         location: formData.location,
       };
 
-      // Only include password if it's provided
-      if (formData.password) {
-        updateData.password = formData.password;
+      const productPayload = {
+        ...updateData,
+      };
+
+      // Only include profilepic if we have new images or user removed image
+      if (uploadedImages !== null) {
+        productPayload.profilepic = uploadedImages;
       }
 
-      const res = await axios.put(`/api/updateuser/${id}`, updateData);
+      // Only include password if it's provided
+      if (formData.password) {
+        productPayload.password = formData.password;
+      }
+
+      const res = await axios.put(`/api/updateuser/${id}`, productPayload);
 
       if (res.data.success) {
         setSuccess("Profile updated successfully");
         setCustomerdata({
           ...customerdata,
-          ...updateData,
+          ...productPayload,
         });
         setTimeout(() => {
           setOpenedit(false);
@@ -216,13 +275,14 @@ export default function Page() {
       setExpandedSection(section);
     }
   };
-
   return (
     <div className="min-h-screen bg-white text-gray-900 py-6 sm:py-8 md:py-12">
       <div className="max-w-5xl mx-auto border border-gray-300 px-4 sm:px-6 md:px-12 py-5 rounded-lg">
         {/* Header */}
         <div className="flex  items-center justify-between  mb-6 sm:mb-8">
-          <h1 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-0">Your Profile</h1>
+          <h1 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-0">
+            Your Profile
+          </h1>
           <button
             onClick={() => setOpenedit(true)}
             type="button"
@@ -237,13 +297,20 @@ export default function Page() {
           {/* Top row: avatar + name */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8">
             <div className="flex items-center gap-4 sm:gap-6 mb-4 sm:mb-0">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center overflow-hidden">
-                <span className="text-lg font-medium text-white">
-                  {customerdata?.username
-                    ? customerdata.username.charAt(0).toUpperCase()
-                    : "U"}
-                </span>
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full  flex items-center justify-center overflow-hidden">
+                {customerdata?.profilepic ? (
+                  <img
+                    src={customerdata?.profilepic?.[0].url}
+                    alt="profile pic"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-lg font-medium text-white">
+                    {customerdata?.username?.charAt(0).toUpperCase()}
+                  </span>
+                )}
               </div>
+
               <div>
                 <div className="text-lg font-semibold capitalize">
                   {loadingCustomer
@@ -262,9 +329,7 @@ export default function Page() {
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
               <div className="bg-blue-100 px-3 py-2 rounded-md text-xs sm:text-sm text-blue-800">
                 Role:{" "}
-                <span className="font-medium">
-                  {customerdata?.role ?? "—"}
-                </span>
+                <span className="font-medium">{customerdata?.role ?? "—"}</span>
               </div>
               <div className="flex items-center gap-2 bg-green-100 px-3 py-2 rounded-md text-xs sm:text-sm text-green-800">
                 <Users size={14} />
@@ -288,13 +353,17 @@ export default function Page() {
             {/* Personal Info Accordion */}
             <div className="bg-white rounded-md border border-gray-200 overflow-hidden">
               <button
-                onClick={() => toggleSection('personal')}
+                onClick={() => toggleSection("personal")}
                 className="w-full flex justify-between items-center p-4 text-left"
               >
                 <h2 className="text-lg font-medium">Personal Information</h2>
-                {expandedSection === 'personal' ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                {expandedSection === "personal" ? (
+                  <ChevronUp size={20} />
+                ) : (
+                  <ChevronDown size={20} />
+                )}
               </button>
-              {expandedSection === 'personal' && (
+              {expandedSection === "personal" && (
                 <div className="p-4 border-t border-gray-200">
                   <InfoRow
                     label={
@@ -349,16 +418,25 @@ export default function Page() {
             </div>
 
             {/* Appointments Accordions */}
-            {['completed', 'pending', 'cancelled'].map((status) => (
-              <div key={status} className="bg-white rounded-md border border-gray-200 overflow-hidden">
+            {["completed", "pending", "cancelled"].map((status) => (
+              <div
+                key={status}
+                className="bg-white rounded-md border border-gray-200 overflow-hidden"
+              >
                 <button
                   onClick={() => toggleSection(status)}
                   className="w-full flex justify-between items-center p-4 text-left"
                 >
                   <div className="flex items-center gap-3">
-                    {status === 'completed' && <CheckCircle size={18} className="text-green-500" />}
-                    {status === 'pending' && <Clock size={18} className="text-yellow-500" />}
-                    {status === 'cancelled' && <XCircle size={18} className="text-red-500" />}
+                    {status === "completed" && (
+                      <CheckCircle size={18} className="text-green-500" />
+                    )}
+                    {status === "pending" && (
+                      <Clock size={18} className="text-yellow-500" />
+                    )}
+                    {status === "cancelled" && (
+                      <XCircle size={18} className="text-red-500" />
+                    )}
                     <div>
                       <div className="text-sm text-gray-800 font-medium capitalize">
                         {status}
@@ -371,7 +449,11 @@ export default function Page() {
                       </div>
                     </div>
                   </div>
-                  {expandedSection === status ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                  {expandedSection === status ? (
+                    <ChevronUp size={20} />
+                  ) : (
+                    <ChevronDown size={20} />
+                  )}
                 </button>
                 {expandedSection === status && (
                   <div className="p-4 border-t border-gray-200">
@@ -578,8 +660,7 @@ export default function Page() {
               </div>
             </div>
           </div>
-           <div className="w-full flex items-center justify-center mt-12">
-      </div>
+          <div className="w-full flex items-center justify-center mt-12"></div>
 
           {error && <div className="mt-4 text-xs text-red-500">{error}</div>}
         </div>
@@ -616,7 +697,41 @@ export default function Page() {
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 w-full sm:grid-cols-2 gap-4">
+                <div className="sm:col-span-2 w-full flex items-center justify-center">
+                  <div className=" rounded-full overflow-hidden border border-gray-500 flex items-center justify-center">
+                    {/* {formData?.image?.url ? (
+                      <div>
+                        <input
+                          type="file"
+                          // ref={fileInputRef}
+                          // onChange={handleFileSelect}
+                          multiple
+                          accept="image/*"
+                          className="bg-amber-400 h-32 w-32"
+                        />
+                        <img
+                          src={formData.image.url}
+                          alt="profile"
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div>
+                        <input
+                          type="file"
+                          // ref={fileInputRef}
+                          // onChange={handleFileSelect}
+                          multiple
+                          accept="image/*"
+                          className="bg-amber-400 h-32 w-32"
+                        />
+                        <User className="w-8 h-8 text-white" />
+                      </div>
+                    )} */}
+                    <ImageUpload images={imageFiles} onChange={setimageFiles} />
+                  </div>
+                </div>
                 <div className="sm:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Full Name
@@ -772,9 +887,13 @@ export default function Page() {
           </div>
         </div>
       )}
-     
+      <button
+        onClick={() => {
+          signOut();
+        }}
+      >
+        signout
+      </button>
     </div>
   );
 }
-
-
