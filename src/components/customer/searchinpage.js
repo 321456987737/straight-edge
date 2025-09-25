@@ -358,12 +358,12 @@ export default function SearchInPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
         whileHover={{ scale: 1.02 }}
-        className="bg-white w-full rounded-tr-full rounded-tl-full  border justify-center border-black/20 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col "
+        className="bg-white w-full rounded-lg  border justify-center border-black/20 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col "
       >
         {/* Image Section */}
         <div className="w-full flex items-center justify-center ">
 
-        <div className="w-32 h-32 mt-4 rounded-full bg-gray-100  flex items-center justify-center border-b border-black/20">
+        <div className="w-32 h-32 border-2 shadow-md mt-4 rounded-full bg-gray-100  flex items-center justify-center border-b border-black/20">
           {barber.image ? (
             <img
             src={barber.image[0].url}

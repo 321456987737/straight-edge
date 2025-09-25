@@ -178,7 +178,7 @@ export default function ServicesPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
             whileHover={{ scale: 1.02 }}
-            className="bg-white w-full rounded-tr-full rounded-tl-full  border justify-center border-black/20 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col "
+            className="bg-white w-full rounded-lg  border justify-center border-black/20 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col "
           >
             {/* Image Section */}
             <div className="w-full flex items-center justify-center ">
