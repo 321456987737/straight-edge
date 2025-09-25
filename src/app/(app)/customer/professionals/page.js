@@ -169,7 +169,7 @@ export default function TopRatedBarbersPage() {
         <div className="w-32 h-32 mt-4 rounded-full bg-gray-100  flex items-center justify-center border-b border-black/20">
           {barber.image ? (
             <img
-            src={barber.image[0].url}
+            src={barber.image?.[0].url}
             alt={barber.username}
             width={300}
             height={160}

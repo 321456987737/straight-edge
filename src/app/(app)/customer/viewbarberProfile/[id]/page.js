@@ -207,9 +207,9 @@ const ProfilePage = () => {
   return (
     <div className="relative min-h-screen mb-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-gray-900 bg-white rounded-xl">
       {/* Profile Header */}
-      <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+      <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 ">
         {user?.image ? (
-          <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden">
+          <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-full border-2 border-gray-400 shadow-md overflow-hidden">
             <img
               src={user.image[0].url}
               alt={user.image.alt || user.username}
@@ -217,7 +217,7 @@ const ProfilePage = () => {
             />
           </div>
         ) : (
-          <UserIcon className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gray-200 p-4 text-gray-500" />
+          <UserIcon className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gray-200 p-4 text-gray-500 border-2 border-gray-400 shadow-md" />
         )}
         <div className="text-center sm:text-left mt-4 sm:mt-0">
           <h1 className="text-2xl sm:text-3xl font-bold">{user.username}</h1>
